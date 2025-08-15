@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday Sathwika — A Celebration</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <!-- GSAP for advanced animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    :root{
+      --bg-a:#ffe7f0;
+      --bg-b:#e8f2ff;
+      --bg-c:#f3fff0;
+      --accent1:#ff9ecb;
+      --accent2:#9ee1ff;
+      --accent3:#b7ffd9;
+      --card:#ffffffee;
+      --muted:#6b7280;
+      --ink:#111214;
+      --glass: rgba(255,255,255,0.62);
+      --radius:20px;
+      --max-width:1200px;
+      --focus: 3px solid rgba(33,150,243,0.18);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; color:var(--ink); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+    body{
+      background: linear-gradient(120deg,var(--bg-a), var(--bg-b), var(--bg-c));
+      background-size: 300% 300%;
+      animation: gradientShift 22s ease-in-out infinite;
+      overflow-x:hidden;
+    }
+    @keyframes gradientShift{ 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    /* Layout */
+    .container{ width:min(var(--max-width),94vw); margin:0 auto; padding:20px 0 80px}
+    header{ position:sticky; top:16px; display:flex; justify-content:center; z-index:90; pointer-events:auto}
+    .nav{ width:100%; display:flex; align-items:center; justify-content:space-between; padding:12px 18px; background:var(--glass); border-radius:16px; box-shadow:0 12px 40px rgba(16,24,40,0.08); backdrop-filter: blur(12px)}
+    .brand{display:flex; gap:14px; align-items:center}
+    .symbol{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:grid;place-items:center;color:white;font-weight:800;font-family:'Playfair Display',serif;font-size:20px}
+    .nav-links a{ color:var(--ink); text-decoration:none; font-weight:600; padding:10px 14px; border-radius:12px; transition:all .2s; }
+    .nav-links a:hover{ background: rgba(0,0,0,0.06); transform: translateY(-1px) }
+    .nav .sr-only{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+    main{ padding:40px 0; display:grid; gap:40px}
+    .stage{ display:grid; grid-template-columns: 1fr 400px; gap:32px; align-items:start }
+    @media(max-width:980px){ .stage{ grid-template-columns:1fr } }
+    /* Hero */
+    .hero{ background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(255,255,255,0.70)); border-radius:24px; padding:40px; box-shadow: 0 24px 80px rgba(16,24,40,0.08); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between}
+    .hero::after{ content:''; position:absolute; width:500px;height:500px; right:-150px; top:-120px; background: radial-gradient(circle at 30% 30%, rgba(255,158,203,0.18), transparent 35%), radial-gradient(circle at 70% 70%, rgba(158,225,255,0.14), transparent 35%); transform: rotate(18deg); pointer-events:none; }
+    h1{ font-family:'Playfair Display', serif; font-size: clamp(38px, 6.2vw, 58px); margin:0 0 12px; line-height:1.02; color:var(--ink); position:relative; z-index:2 }
+    .sub{ color:var(--muted); margin-bottom:24px; font-size:16px; position:relative; z-index:2 }
+    .message-container{ display:none } /* Hide the original message */
+    .hero-content{ flex-grow:1; display:flex; flex-direction:column; justify-content:center}
+    .hero-actions{ display:flex; gap:14px; margin-top:24px; align-items:center; position:relative; z-index:2 }
+    .btn{ padding:14px 20px; border-radius:14px; font-weight:700; border:0; cursor:pointer; display:inline-flex; align-items:center; gap:10px; font-size:15px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) }
+    .btn-primary{ background: linear-gradient(135deg,var(--accent1),var(--accent2)); color:white; box-shadow: 0 16px 40px rgba(255,158,203,0.15); transform: translateY(0) }
+    .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 20px 50px rgba(255,158,203,0.25) }
+    .btn-ghost{ background:rgba(255,255,255,0.7); border:1px solid rgba(16,24,40,0.08); color:var(--ink); backdrop-filter: blur(8px) }
+    .btn-ghost:hover{ background:rgba(255,255,255,0.9); transform: translateY(-1px) }
+    .btn:focus{ outline:none; box-shadow: var(--focus) }
+    /* Preview column */
+    .preview{ background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.65)); border-radius:20px; padding:18px; box-shadow: 0 16px 48px rgba(16,24,40,0.08); display:flex; flex-direction:column; gap:16px; position:relative; backdrop-filter: blur(8px) }
+    .slideshow-container{ height:300px; border-radius:16px; overflow:hidden; background:linear-gradient(180deg,var(--accent2),var(--accent3)); position:relative; cursor:pointer }
+    .slideshow-container img{ width:100%; height:100%; object-fit:contain; display:block; transition: transform 0.5s ease }
+    .slideshow-overlay{ position:absolute; bottom:0; left:0; right:0; background: linear-gradient(transparent, rgba(0,0,0,0.6)); color:white; padding:20px; transform: translateY(100%); transition: transform 0.3s ease }
+    .slideshow-container:hover .slideshow-overlay{ transform: translateY(0) }
+    .slideshow-container:hover img{ transform: scale(1.05) }
+    .slideshow-controls{ position:absolute; top:50%; left:50%; transform: translate(-50%, -50%); display:flex; gap:12px; opacity:0; transition: opacity 0.3s ease }
+    .slideshow-container:hover .slideshow-controls{ opacity:1 }
+    .control-btn{ background:rgba(255,255,255,0.9); border:none; border-radius:50%; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; transition: all 0.2s }
+    .control-btn:hover{ background:white; transform: scale(1.1) }
+    .meta{ display:flex; justify-content:space-between; align-items:center; font-size:14px; color:var(--muted) }
+    .music-btn{ display:inline-flex; align-items:center; gap:10px; padding:10px 16px; border-radius:14px; background:white; cursor:pointer; border:0; font-weight:700; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: all 0.2s }
+    .music-btn:hover{ transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.1) }
+    .music-btn:focus{ outline:none; box-shadow: var(--focus) }
+    .pulse{ animation: pulseGlow 1.8s infinite }
+    @keyframes pulseGlow{ 0%{ box-shadow:0 4px 12px rgba(255,158,203,0.1) } 50%{ box-shadow:0 8px 24px rgba(255,158,203,0.2) } 100%{ box-shadow:0 4px 12px rgba(255,158,203,0.1) } }
+    /* Lightbox */
+    .lightbox{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:120; backdrop-filter: blur(8px); background: rgba(2,6,23,0.5) }
+    .lightbox.open{ display:flex }
+    .lb-inner{ width:min(1100px,94vw); border-radius:20px; overflow:hidden; transform-origin:center; position:relative; background:#0a0a0a; padding:12px }
+    .lb-inner img{ width:100%; height:calc(85vh); object-fit:contain; display:block; background:#111; border-radius:12px }
+    .lb-controls{ position:absolute; top:16px; right:16px; display:flex; gap:10px; z-index:124 }
+    .lb-nav{ position:absolute; top:50%; transform: translateY(-50%); display:flex; gap:12px; z-index:124 }
+    .lb-nav.left{ left:16px }
+    .lb-nav.right{ right:16px }
+    .icon-btn{ background:rgba(255,255,255,0.95); border-radius:14px; padding:12px 14px; border:0; cursor:pointer; font-weight:700; font-size:16px; transition: all 0.2s }
+    .icon-btn:hover{ background:white; transform: scale(1.05) }
+    .icon-btn:focus{ box-shadow: var(--focus) }
+    .slide-counter{ position:absolute; bottom:20px; left:50%; transform: translateX(-50%); background:rgba(0,0,0,0.7); color:white; padding:8px 16px; border-radius:20px; font-size:14px }
+    
+    /* Message Modal - Similar to slideshow container */
+    .message-modal{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:130; backdrop-filter: blur(8px); background: rgba(2,6,23,0.5) }
+    .message-modal.open{ display:flex }
+    .message-content{ background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.65)); border-radius:20px; padding:30px; box-shadow: 0 16px 48px rgba(16,24,40,0.08); width:min(800px,90vw); max-height:85vh; overflow-y:auto; position:relative; backdrop-filter: blur(8px) }
+    .message-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px }
+    .message-title{ font-family:'Playfair Display', serif; font-size:24px; color:var(--ink) }
+    .close-message{ background:rgba(255,255,255,0.9); border-radius:50%; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:18px; transition: all 0.2s; border:none }
+    .close-message:hover{ background:white; transform: scale(1.1) }
+    .message-body{ font-size:16px; line-height:1.65; color:#0f1720; border: 1px solid rgba(255,255,255,0.3); padding:24px; border-radius:16px; background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.68)) }
+    .message-footer{ margin-top:20px; text-align:right }
+    
+    /* Footer */
+    footer{ text-align:center; color:var(--muted); padding:32px 16px 60px; font-size:15px }
+    /* Confetti canvas */
+    #conf { position:fixed; left:0; top:0; pointer-events:none; z-index:200 }
+    /* Focus ring for keyboard users */
+    body.show-focus :focus{ outline: none; box-shadow: var(--focus) }
+    /* Mobile optimizations */
+    @media(max-width:768px){
+      .hero{ padding:28px }
+      .preview{ padding:14px }
+      .slideshow-container{ height:240px }
+      .btn{ padding:12px 16px; font-size:14px }
+      .hero-actions{ flex-direction:column; align-items:stretch }
+      .hero-actions .btn{ justify-content:center }
+      .message-content{ padding:20px; width:95vw }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+      <div class="brand">
+        <div class="symbol">S</div>
+        <div>
+          <div style="font-size:14px; color:var(--muted)">A Special Celebration</div>
+          <div style="font-size:16px; font-weight:800; letter-spacing:.5px">Happy Birthday Sathwika</div>
+        </div>
+      </div>
+      <!--<div class="nav-links">
+        <a href="#top">Home</a>
+        <a href="#slideshow">Gallery</a>
+      </div>-->
+    </nav>
+  </header>
+  <main class="container" id="top">
+    <div class="stage">
+      <!-- HERO -->
+      <section class="hero" id="hero">
+        <div class="hero-content">
+          <h1>Happy Birthday, Dear Sister! 🌸</h1>
+          <div class="sub">A heartfelt tribute filled with love, memories, and beautiful moments we've shared together.</div>
+        </div>
+        
+        <!-- Original message hidden -->
+        <div class="message-container">
+          <div class="message">
+            <p style="margin:0 0 16px 0">My dearest sister, on your special day, I want you to know how grateful I am to have you in my life. You bring so much joy, laughter, and love to everyone around you.</p>
+            <p style="margin:0">Your the best sissy in the whole world, naaku nijamga chelli no have nuvvu own chelli naaku, cousins have le kaani nenu eppudu vallatho antha connect avvala, naaku chelli ante nuvvey 😁, kaani okka vishyam eppudu andhari happiness chusthav mari kanisam eppudo amavasya ki okasari aina ne happiness gurinchi alochinchuu..Ne life nuvvu happy ga undali atleast once in a week or month. Edhi okati thappa inka remaining vihsyalo thop nuvvu neeku unna clarity, logical thinking okkosari anipistadi neney ekkuva alochistha naakante ekkuva alochistav, so eroju nunchi antha alochinchadam manesi neeku nachindhi nuvvu happy ga undedhi chey, edhaina okati chesetappudu vallu em think vellu em think kaadu nuvvem think alochinchuu.. so over ga alochinchaku see neekosam aunty, uncle, akka, friends ga memu, andharam unnam, see sissyy neeku eppudu oka brother ga support chesthuney unta, emo okkosari anipistadhi entha luck lekapothe nee laanti chelli dorukudhi, emo naaku dorikina best friend best sister nuvvey, antha okay kaani konchem appuduappudu navvuthuu undu ok naa, eppudu jarigipoinavi alochinchi sad avvakunda jaragalsindhi think and stay happy. Final ga Wish A Very Happy Birthday! 💕... Keep Smiling! 😁</p>
+            <p style="margin:16px 0 0 0; font-weight:600; color:var(--accent1)">— With all my heart 🥳,</p>
+          </div>
+        </div>
+        
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="viewMessage">
+            <span>💌</span> Read Birthday Message
+          </button>
+          <!--<button class="btn btn-ghost" id="viewGallery">
+            <span>📸</span> View Photo Gallery
+          </button>-->
+        </div>
+      </section>
+      <!-- SLIDESHOW PREVIEW -->
+      <aside class="preview" id="slideshow">
+        <div class="slideshow-container" id="slideshowContainer">
+          <img id="currentSlide" src="./IMG-20250815-WA0023.jpg" alt="Birthday memories" />
+          <div class="slideshow-overlay">
+            <div style="font-weight:600; margin-bottom:4px" id="slideTitle">Beautiful Memories</div>
+            <div style="font-size:13px; opacity:0.9" id="slideCaption">Click to expand and view all photos</div>
+          </div>
+          <div class="slideshow-controls">
+            <button class="control-btn" id="prevSlide" aria-label="Previous photo">‹</button>
+            <button class="control-btn" id="expandGallery" aria-label="Expand gallery">⛶</button>
+            <button class="control-btn" id="nextSlide" aria-label="Next photo">›</button>
+          </div>
+        </div>
+        <div class="meta">
+          <div>
+            <div style="font-weight:700">Photo Collection</div>
+            <!--<div style="color:var(--muted); font-size:13px">14 precious memories including childhood</div>-->
+          </div>
+          
+        </div>
+        <div style="font-size:13px; color:var(--muted); line-height:1.4">
+          ✨ Auto-playing slideshow with beautiful transitions. Click any photo to view in full screen with navigation controls.
+        </div>
+      </aside>
+    </div>
+  </main>
+  
+  <!-- MESSAGE MODAL -->
+  <div class="message-modal" id="messageModal" role="dialog" aria-label="Birthday message">
+    <div class="message-content">
+      <div class="message-header">
+        <h2 class="message-title">A Special Birthday Message</h2>
+        <button class="close-message" id="closeMessage" aria-label="Close message">✕</button>
+      </div>
+      <div class="message-body">
+        <p style="margin:0 0 16px 0">My dearest sister, on your special day, I want you to know how grateful I am to have you in my life. You bring so much joy, laughter, and love to everyone around you.</p>
+        <p style="margin:0">Your the best sissy in the whole world, naaku nijamga chelli no have nuvvu own chelli naaku, cousins have le kaani nenu eppudu vallatho antha connect avvala, naaku chelli ante nuvvey 😁, kaani okka vishyam eppudu andhari happiness chusthav mari kanisam eppudo amavasya ki okasari aina ne happiness gurinchi alochinchuu..Ne life nuvvu happy ga undali atleast once in a week or month. Edhi okati thappa inka remaining vihsyalo thop nuvvu neeku unna clarity, logical thinking okkosari anipistadi neney ekkuva alochistha naakante ekkuva alochistav, so eroju nunchi antha alochinchadam manesi neeku nachindhi nuvvu happy ga undedhi chey, edhaina okati chesetappudu vallu em think vellu em think kaadu nuvvem think alochinchuu.. so over ga alochinchaku see neekosam aunty, uncle, akka, friends ga memu, andharam unnam, see sissyy neeku eppudu oka brother ga support chesthuney unta, emo okkosari anipistadhi entha luck lekapothe nee laanti chelli dorukudhi, emo naaku dorikina best friend best sister nuvvey, antha okay kaani konchem appuduappudu navvuthuu undu ok naa, eppudu jarigipoinavi alochinchi sad avvakunda jaragalsindhi think and stay happy. Final ga Wish A Very Happy Birthday! 💕... Keep Smiling! 😁</p>
+        <p style="margin:16px 0 0 0; font-weight:600; color:var(--accent1)">— With all my heart 🥳,</p>
+      </div>
+      <div class="message-footer">
+        <button class="btn btn-primary" id="closeMessageBtn">Close</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-label="Photo viewer">
+    <div class="lb-inner">
+      <img id="lbImg" src="/placeholder.svg" alt="Expanded photo" />
+      <div class="lb-controls">
+        <button class="icon-btn" id="lbClose" aria-label="Close viewer">✕</button>
+      </div>
+      <div class="lb-nav left">
+        <button class="icon-btn" id="lbPrev" aria-label="Previous photo">‹</button>
+      </div>
+      <div class="lb-nav right">
+        <button class="icon-btn" id="lbNext" aria-label="Next photo">›</button>
+      </div>
+      <div class="slide-counter" id="slideCounter">1 / 14</div>
+    </div>
+  </div>
+  
+  <!-- Audio -->
+  <audio id="bgAudio" loop preload="auto">
+    <source src="/placeholder.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  
+  <!-- Confetti Canvas -->
+  <canvas id="conf"></canvas>
+  
+  <footer>
+    Made with 💖 for the most amazing sister in the world
+  </footer>
+  
+  <script>
+    // ---------- Config ----------
+    gsap.registerPlugin(ScrollTrigger);
+    const photoData = [
+      { src: "./IMG-20250815-WA0019.jpg", title: "Little sissy"  },
+      { src: "./IMG-20250815-WA0022.jpg", title: "Beatiful Sissy" },
+      { src: "./IMG-20240815-WA0025.jpg", title: "Cute Sissy" },
+      { src: "./Snapchat-322925768.jpg", title: "Selfie Together" },
+      { src: "./Screenshot_20240415_124733_Snapchat.jpg", title: "College Fest Vibes" },
+      { src: "./Snapchat-710107771.jpg", title: "Fantastic Four" },
+      { src: "./IMG-20240818-WA0004.jpg", title: "Previous Birthday Celebrations 2024" },
+      { src: "./Screenshot_20250816_040551_Gallery.jpg", title: "Previous Birthday Celebrations 2023" },
+      { src: "./Screenshot_20250815_204540_Gallery.jpg", title: "Recent Memories" },
+    ];
+    
+    // ---------- Accessibility ----------
+    document.addEventListener('keyup', (e) => { if (e.key === 'Tab') document.body.classList.add('show-focus'); });
+    
+    // ---------- GSAP Entrance Animations ----------
+    gsap.from('.nav', { y:-20, autoAlpha:0, duration:1, ease:'power2.out' });
+    gsap.from('h1', { y:30, autoAlpha:0, duration:1.2, delay:0.15, ease:'power3.out' });
+    gsap.from('.sub', { y:20, autoAlpha:0, duration:1, delay:0.25, ease:'power3.out' });
+    gsap.from('.hero-actions', { y:20, autoAlpha:0, duration:1, delay:0.35, ease:'power3.out' });
+    gsap.from('.preview', { y:20, autoAlpha:0, duration:1, delay:0.4, ease:'power3.out' });
+    
+    // ---------- Match Container Heights ----------
+    function matchContainerHeights() {
+      if (window.innerWidth > 980) { // Only on desktop
+        const hero = document.getElementById('hero');
+        const preview = document.getElementById('slideshow');
+        if (hero && preview) {
+          const previewHeight = preview.offsetHeight;
+          hero.style.minHeight = `${previewHeight}px`;
+        }
+      } else {
+        // Reset on mobile
+        const hero = document.getElementById('hero');
+        if (hero) {
+          hero.style.minHeight = '';
+        }
+      }
+    }
+    
+    // Call on load and resize
+    window.addEventListener('load', matchContainerHeights);
+    window.addEventListener('resize', matchContainerHeights);
+    
+    // ---------- Message Modal Logic ----------
+    const messageModal = document.getElementById('messageModal');
+    
+    function openMessageModal() {
+      messageModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      gsap.fromTo('.message-content', 
+        { scale: 0.9, autoAlpha: 0 }, 
+        { scale: 1, autoAlpha: 1, duration: 0.4, ease: 'power2.out' }
+      );
+      launchConfetti(100);
+    }
+    
+    function closeMessageModal() {
+      gsap.to('.message-content', { 
+        scale: 0.9, 
+        autoAlpha: 0, 
+        duration: 0.3, 
+        ease: 'power2.in',
+        onComplete: () => {
+          messageModal.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+    
+    // Message modal event listeners
+    document.getElementById('viewMessage').addEventListener('click', openMessageModal);
+    document.getElementById('closeMessage').addEventListener('click', closeMessageModal);
+    document.getElementById('closeMessageBtn').addEventListener('click', closeMessageModal);
+    messageModal.addEventListener('click', (e) => { if (e.target === messageModal) closeMessageModal(); });
+    
+    // Keyboard navigation for message modal
+    document.addEventListener('keydown', (e) => {
+      if (messageModal.classList.contains('open') && e.key === 'Escape') {
+        closeMessageModal();
+      }
+    });
+    
+    // ---------- Slideshow Logic ----------
+    let currentIndex = 0;
+    const currentSlide = document.getElementById('currentSlide');
+    const slideTitle = document.getElementById('slideTitle');
+    const slideCaption = document.getElementById('slideCaption');
+    
+    function updateSlide(index) {
+      const photo = photoData[index];
+      gsap.to(currentSlide, { 
+        autoAlpha: 0, 
+        duration: 0.3, 
+        onComplete: () => {
+          currentSlide.src = photo.src;
+          slideTitle.textContent = photo.title;
+          slideCaption.textContent = photo.caption;
+          gsap.to(currentSlide, { autoAlpha: 1, duration: 0.4 });
+          // Recalculate heights after slide update
+          setTimeout(matchContainerHeights, 100);
+        }
+      });
+    }
+    
+    function nextPhoto() {
+      currentIndex = (currentIndex + 1) % photoData.length;
+      updateSlide(currentIndex);
+    }
+    
+    function prevPhoto() {
+      currentIndex = (currentIndex - 1 + photoData.length) % photoData.length;
+      updateSlide(currentIndex);
+    }
+    
+    // Auto-advance slideshow
+    let slideshowInterval = setInterval(nextPhoto, 4000);
+    
+    // Pause on hover
+    const slideshowContainer = document.getElementById('slideshowContainer');
+    slideshowContainer.addEventListener('mouseenter', () => clearInterval(slideshowInterval));
+    slideshowContainer.addEventListener('mouseleave', () => {
+      slideshowInterval = setInterval(nextPhoto, 4000);
+    });
+    
+    // Manual controls
+    document.getElementById('nextSlide').addEventListener('click', (e) => {
+      e.stopPropagation();
+      nextPhoto();
+      clearInterval(slideshowInterval);
+      slideshowInterval = setInterval(nextPhoto, 4000);
+    });
+    
+    document.getElementById('prevSlide').addEventListener('click', (e) => {
+      e.stopPropagation();
+      prevPhoto();
+      clearInterval(slideshowInterval);
+      slideshowInterval = setInterval(nextPhoto, 4000);
+    });
+    
+    // ---------- Lightbox ----------
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    const slideCounter = document.getElementById('slideCounter');
+    let lightboxIndex = 0;
+    
+    function openLightbox(index = currentIndex) {
+      lightboxIndex = index;
+      updateLightboxImage();
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      gsap.fromTo('.lb-inner', 
+        { scale: 0.9, autoAlpha: 0 }, 
+        { scale: 1, autoAlpha: 1, duration: 0.4, ease: 'power2.out' }
+      );
+    }
+    
+    function closeLightbox() {
+      gsap.to('.lb-inner', { 
+        scale: 0.9, 
+        autoAlpha: 0, 
+        duration: 0.3, 
+        ease: 'power2.in',
+        onComplete: () => {
+          lightbox.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+    
+    function updateLightboxImage() {
+      const photo = photoData[lightboxIndex];
+      lbImg.src = photo.src;
+      lbImg.alt = photo.title;
+      slideCounter.textContent = `${lightboxIndex + 1} / ${photoData.length}`;
+    }
+    
+    function nextLightboxImage() {
+      lightboxIndex = (lightboxIndex + 1) % photoData.length;
+      gsap.to(lbImg, { 
+        autoAlpha: 0, 
+        duration: 0.2, 
+        onComplete: () => {
+          updateLightboxImage();
+          gsap.to(lbImg, { autoAlpha: 1, duration: 0.3 });
+        }
+      });
+    }
+    
+    function prevLightboxImage() {
+      lightboxIndex = (lightboxIndex - 1 + photoData.length) % photoData.length;
+      gsap.to(lbImg, { 
+        autoAlpha: 0, 
+        duration: 0.2, 
+        onComplete: () => {
+          updateLightboxImage();
+          gsap.to(lbImg, { autoAlpha: 1, duration: 0.3 });
+        }
+      });
+    }
+    
+    // Lightbox event listeners
+    slideshowContainer.addEventListener('click', () => openLightbox());
+    document.getElementById('expandGallery').addEventListener('click', (e) => {
+      e.stopPropagation();
+      openLightbox();
+    });
+    document.getElementById('lbClose').addEventListener('click', closeLightbox);
+    document.getElementById('lbNext').addEventListener('click', nextLightboxImage);
+    document.getElementById('lbPrev').addEventListener('click', prevLightboxImage);
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.classList.contains('open')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') prevLightboxImage();
+        if (e.key === 'ArrowRight') nextLightboxImage();
+      }
+    });
+    
+    // ---------- Music Control ----------
+    const audio = document.getElementById('bgAudio');
+    
+    function toggleMusic() {
+      if (audio.paused) {
+        audio.play().then(() => {
+          launchConfetti(80);
+        }).catch(() => {
+          console.log("Audio playback failed");
+        });
+      } else {
+        audio.pause();
+      }
+    }
+    
+    // ---------- Navigation ----------
+    document.getElementById('viewGallery').addEventListener('click', () => {
+      document.getElementById('slideshow').scrollIntoView({ behavior: 'smooth' });
+      launchConfetti(100);
+    });
+    
+    document.querySelectorAll('.nav a').forEach(a => {
+      a.addEventListener('click', (e) => {
+        const href = a.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+    
+    // ---------- Confetti System ----------
+    (function() {
+      const canvas = document.getElementById('conf');
+      const ctx = canvas.getContext('2d');
+      let W = canvas.width = window.innerWidth;
+      let H = canvas.height = window.innerHeight;
+      
+      window.addEventListener('resize', () => {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      });
+      
+      let particles = [];
+      let animationFrame = null;
+      
+      function createParticles(count = 100) {
+        const colors = ['#ff9ecb', '#9ee1ff', '#b7ffd9', '#fff2b0', '#e9dbff'];
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            x: Math.random() * W,
+            y: -10 - Math.random() * 200,
+            vx: (-3 + Math.random() * 6),
+            vy: 2 + Math.random() * 8,
+            radius: 3 + Math.random() * 6,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * Math.PI * 2,
+            rotationSpeed: 0.02 + Math.random() * 0.08,
+            life: 0
+          });
+        }
+        if (!animationFrame) animate();
+      }
+      
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
+        
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.05;
+          p.rotation += p.rotationSpeed;
+          p.life++;
+          
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.radius/2, -p.radius/2, p.radius * 1.5, p.radius);
+          ctx.restore();
+        }
+        
+        particles = particles.filter(p => p.y < H + 100 && p.life < 600);
+        
+        if (particles.length > 0) {
+          animationFrame = requestAnimationFrame(animate);
+        } else {
+          cancelAnimationFrame(animationFrame);
+          animationFrame = null;
+        }
+      }
+      
+      window.launchConfetti = function(count = 100) {
+        createParticles(count);
+      };
+    })();
+    
+    // Initialize first slide
+    updateSlide(0);
+    
+    // Launch welcome confetti after page load
+    window.addEventListener('load', () => {
+      setTimeout(() => launchConfetti(150), 1000);
+    });
+  </script>
+</body>
+</html>
